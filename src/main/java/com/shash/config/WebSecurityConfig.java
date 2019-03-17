@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import com.shash.util.CorsFilter;
 
@@ -63,10 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		 http.addFilterBefore(corsFilter, ChannelProcessingFilter.class);
 
-		http.authorizeRequests().antMatchers("/", "/register").permitAll().antMatchers("/books")
-				.hasAnyRole("USER", "ADMIN").anyRequest().authenticated().and().formLogin().permitAll().and().logout()
-				.permitAll();
-
+		http.httpBasic().and().authorizeRequests().antMatchers("/", "/register","/login").permitAll().antMatchers("/books")
+				.hasAnyRole("USER", "ADMIN").anyRequest().authenticated().and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+			    .deleteCookies("JSESSIONID").permitAll();
 		http.csrf().disable();
 	}
 }

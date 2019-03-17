@@ -1,5 +1,6 @@
 package com.shash.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,12 @@ public class BooksController {
 	
 	@Autowired
 	JdbcUserDetailsManager jdbcUserDetailsManager;
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	 @RequestMapping("/user")
+	  public Principal user(Principal user) {
+	    return user;
+	  }
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String processRegister(@RequestBody UserRegistration userRegistrationObject) {
